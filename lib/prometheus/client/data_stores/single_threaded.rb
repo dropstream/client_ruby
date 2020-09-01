@@ -49,7 +49,7 @@ module Prometheus
           end
 
           def delete(labels:)
-            synchronize { @internal_store.delete(labels) }
+            @internal_store.delete(labels)
           end
         end
 
