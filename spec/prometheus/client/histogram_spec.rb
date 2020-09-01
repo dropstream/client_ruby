@@ -179,4 +179,21 @@ describe Prometheus::Client::Histogram do
       )
     end
   end
+
+  describe '#purge_label_set' do
+    let(:expected_labels) { [:status] }
+    before do
+      histogram.observe(1, labels: { status: 'foo' })
+    end    
+
+    it 'deletes the metric for a given label set' do
+      expect(histogram.values).to include({ status: 'foo' } => { "2.5" => 1.0, "5" => 1.0, "10" => 1.0, "+Inf" => 1.0, "sum" => 1.0 })
+
+      histogram.purge_label_set(status: 'foo')
+
+      expect(histogram.values).to_not include(
+        { status: 'foo' } => { "2.5" => 1.0, "5" => 1.0, "10" => 1.0, "+Inf" => 1.0, "sum" => 1.0 }
+      )
+    end
+  end
 end

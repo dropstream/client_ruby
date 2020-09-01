@@ -53,6 +53,10 @@ module Prometheus
           def all_values
             synchronize { @internal_store.dup }
           end
+
+          def delete(labels:)
+            synchronize { @internal_store.delete(labels) }
+          end
         end
 
         private_constant :MetricStore

@@ -112,6 +112,16 @@ module Prometheus
         end
       end
 
+      def purge_label_set(labels)
+        base_label_set = label_set_for(labels)
+
+        @store.synchronize do
+          (buckets + ["+Inf", "sum"]).each do |bucket|
+            @store.delete(labels: base_label_set.merge(le: bucket.to_s))
+          end
+        end
+      end
+
       private
 
       # Modifies the passed in parameter

@@ -54,6 +54,15 @@ module Prometheus
         end
       end
 
+      def purge_label_set(labels)
+        base_label_set = label_set_for(labels)
+
+        @store.synchronize do
+          @store.delete(labels: base_label_set.merge(quantile: "count"))
+          @store.delete(labels: base_label_set.merge(quantile: "sum"))
+        end
+      end
+
       private
 
       def reserved_labels

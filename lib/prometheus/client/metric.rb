@@ -60,6 +60,10 @@ module Prometheus
         @store.set(labels: label_set_for(labels), val: 0)
       end
 
+      def purge_label_set(labels)
+        @store.delete(labels: label_set_for(labels))
+      end
+
       # Returns all label sets with their values
       def values
         @store.all_values

@@ -142,4 +142,17 @@ describe Prometheus::Client::Summary do
       )
     end
   end
+
+  describe '#init_label_set' do
+    let(:expected_labels) { [:foo] }
+    before { summary.observe(2, labels: { foo: 'bar' }) }
+
+    it 'deletes the metric for a given label set' do
+      expect(summary.values).to include({ foo: 'bar' } => { "count" => 1.0, "sum" => 2.0 })
+
+      summary.purge_label_set(foo: 'bar')
+
+      expect(summary.values).to_not include({ foo: 'bar' } => { "count" => 1.0, "sum" => 2.0 })
+    end
+  end
 end

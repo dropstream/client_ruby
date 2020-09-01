@@ -196,4 +196,20 @@ describe Prometheus::Client::Gauge do
       expect(gauge.values).to eql({test: 'value'} => 0.0)
     end
   end
+
+  describe '#purge_label_set' do
+    let(:expected_labels) { [:test] }
+
+    before do
+      gauge.set(0, labels: {test: 'value'})
+    end
+
+    it 'deletes the metric for a given label set' do
+      expect(gauge.values).to include({test: 'value'} => 0.0)
+
+      gauge.purge_label_set(test: 'value')
+
+      expect(gauge.values).to_not include({test: 'value'} => 0.0)
+    end
+  end
 end

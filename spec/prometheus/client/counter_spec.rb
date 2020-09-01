@@ -114,4 +114,20 @@ describe Prometheus::Client::Counter do
       expect(counter.values).to eql({test: 'value'} => 0.0)
     end
   end
+
+  describe '#purge_label_set' do
+    let(:expected_labels) { [:test] }
+
+    before do
+      counter.increment(labels: {test: 'label'})
+    end
+
+    it 'deletes the metric for a given label set' do
+      expect(counter.values).to include({test: 'label'} => 1.0)
+
+      counter.purge_label_set(test: 'label')
+
+      expect(counter.values).to_not include({test: 'label'} => 1.0)
+    end
+  end
 end

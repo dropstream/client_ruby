@@ -155,6 +155,10 @@ module Prometheus
             end
           end
 
+          def delete(labels:)
+            raise NotImplementedError("delete not implemented for direct file store")
+          end
+
           private
 
           def in_process_sync
